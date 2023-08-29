@@ -14,6 +14,6 @@ In the essence of speed, analyzing thousands of games, openings, and positions w
 
 ## Background
 
-I started playing chess in August of 2022 and after about a year of non-concurrent play, I've been able to increase my ELO rating from 479 to 1222. While 1200 is still a "beginner rating" (50th percentile for chess.com) and nothing to be immensely proud of, I've noticed a considerable difference in the learning rate between myself and many fellow peers around this level. 
+I started playing chess in August of 2022 and, after about a year of non-concurrent play, I've been able to increase my ELO rating from 479 to 1222. While 1200 is still a "beginner rating" (50th percentile for chess.com) and nothing to be immensely proud of, I've noticed a considerable difference in the learning rate between myself and many fellow peers around this level. 
 
 This project is targeted towards casual players below 1000 (42% of playerbase) to build habits that will improve their fundamentals and allow them to play a solid game barring positional intricacies and time constraints. This opposes the conventional approach of chess engines which simply identify the best possible movie in the position with little insight as to why. It's also been noted by GMs that following sound principles will outweigh situational intricacies in the long term.
