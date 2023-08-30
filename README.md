@@ -26,3 +26,5 @@ This project is targeted towards casual players below 1000 (42% of playerbase) t
 
 Openings - a very crucial concept as it decides very game
 While memorizing 15 moves to set an opening trap may be ideal for some, this approach a. wastes time that could be spent on fundamentals and b. doesn't work on experienced players that have either seen the trap before or play conservative lines. Pick openings with straightforward development and open positions. This allows for easy tactics instead of complicated positional theory.
+
+However, watching hours of chess games is also a bit much for some casual players. This project aims to present the core principles of the series using statistical evidence to help beginners improve their skills.
