@@ -18,7 +18,7 @@ This project is made for the hardstuck 800 elo player that doesn't understand ho
 
 ## Background
 
-I started playing chess in August of 2022 and, after about a year of non-concurrent play, I've been able to increase my ELO rating from 479 to 1222. While 1200 is still a "beginner rating" (50th percentile for chess.com) and nothing to be immensely proud of, I've noticed a considerable difference in the learning rate between myself and many fellow peers around this level.
+I started playing chess in August of 2022 and, after about a year of non-concurrent play, I've been able to increase my ELO rating from 479 to 1222 [link](https://www.chess.com/stats/live/rapid/justinwitter/0). While 1200 is still a "beginner rating" (50th percentile for chess.com) and nothing to be immensely proud of, I've noticed a considerable difference in the learning rate between myself and many fellow peers around this level.
 
 While being stuck around 600 I stumbled upon **chessbrah**, a YouTube channel that posted videos of GMs playing lower rated players and displaying fundamental chess rules instead of crushing. In fact, the GMs lost some games (with X5 proability) just to illustrate the emphasis on sound chess rather than perfect chess. At the end of the day I realized that the changes to my decision-making in chess were now being data-driven, with that data coming from GM teachings. Chess is all about optimal decison-making so I wanted to dive into the landscape of beginner chess to truly see how these games were being played. If I could identify common mistakes and determine better alternatives, on average this information would provide myself and others with the best opportunity to move up the ranks quickly.
 
