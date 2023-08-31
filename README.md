@@ -2,19 +2,17 @@
 
 Hi! Welcome to DataKnight.
 
-This project aims to help casual chess players improve their game as fast as possible, while also compiling the concepts I've learned from chess over the past year or so. 
+This project aims to help casual chess players quickly improve their game, while also compiling the concepts I've learned from chess over the past year or so. 
 
-In the interest of speed, it would be counterintuitive to analyze hundreds (if not thousands) of openings, structures, and endgames that an advanced player may be exposed to. For the beginner level, this is quite trivial. Instead the main focus is fundamentals. I believe (along with many GMs) that the best way to improve from these levels is to develop sound habits that apply to multiple positions and lead to tactical play. This emphasis on tactics 
+In the interest of speed, it would be counterintuitive to analyze hundreds (if not thousands) of openings, structures, and endgames that an advanced player may be exposed to. Instead, the main focus here is to emphasize fundamental chess principles while using data from real games as support. I believe (along with many GMs) that the best way to improve from these levels is to develop sound habits that apply to multiple positions and lead to tactical play.
 
-The focus is on fundamental chess, not perfect chess.
-
-This project is made for the hardstuck 800 elo player that doesn't understand how they keep hanging their queen every game. Most of the time this comes from a lack of fundamentals.
+While the traditional chess engine recommends the optimal move in certain positions, this analysis will focus on building a framework that consists of general principles of play that can be applied to many kinds of positions for decision-making. The goal is to help beginners play fundamental chess, which might not always be perfect chess.
 
 ## Structure
 
-1. Background
-2. EDA of Chess - Identify what the landscape of chess ratings/games look like, how your rating matches up, and what the obvious mistakes are for your level
-3. AI
+1. chessdotcom-scraper : retrieves chess data using the Chess.com API
+2. data-preparation : cleans data and engineers necessary features
+3. habits-analysis : explores recommended chess habits using statistical methods
 
 ## Background
 
@@ -27,4 +25,8 @@ This project is targeted towards casual players below 1000 (42% of playerbase) t
 Openings - a very crucial concept as it decides very game
 While memorizing 15 moves to set an opening trap may be ideal for some, this approach a. wastes time that could be spent on fundamentals and b. doesn't work on experienced players that have either seen the trap before or play conservative lines. Pick openings with straightforward development and open positions. This allows for easy tactics instead of complicated positional theory.
 
+This project is made for the hardstuck 800 elo player that doesn't understand how they keep hanging their queen every game. Most of the time this comes from a lack of fundamentals.
+
 However, watching hours of chess games is also a bit much for some casual players. This project aims to present the core principles of the series using statistical evidence to help beginners improve their skills.
+
+- Identify what the landscape of chess ratings/games look like, how your rating matches up, and what the obvious mistakes are for your level
