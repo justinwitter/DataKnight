@@ -8,7 +8,7 @@ In the interest of speed, it would be counterintuitive to analyze hundreds (if n
 
 While the traditional chess engine recommends the optimal move in certain positions, this analysis will focus on building a framework that consists of general principles of play that can be applied to many kinds of positions for decision-making. The goal is to help beginners play fundamental chess, which might not always be perfect chess.
 
-## Structure
+## Contents
 
 1. chessdotcom-scraper : retrieves chess data using the Chess.com API
 2. data-preparation : cleans data and engineers necessary features
