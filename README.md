@@ -10,9 +10,9 @@ While the traditional chess engine recommends the optimal move in certain positi
 
 ## Contents
 
-1. chessdotcom-scraper : retrieves chess data using the Chess.com API
-2. data-preparation : cleans data and engineers necessary features
-3. habits-analysis : explores recommended chess habits using statistical methods
+1. chessdotcom-scraper.py : retrieves chess data using the Chess.com API
+2. data-preparation.ipynb : cleans data and engineers necessary features
+3. habits-analysis.ipynb : explores recommended chess habits using statistical methods
 
 ## Background
 
