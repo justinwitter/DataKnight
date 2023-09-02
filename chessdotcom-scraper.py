@@ -83,9 +83,9 @@ def parse_games(games):
         opening = None
       
       # create row in df
-      games_df.append({'game_id':game_id, 'opening':opening, 'white_rating':white_rating, 
-                       'black_rating':black_rating, 'white_result':white_result, 'black_result':black_result, 
-                       'time_class':time_class, 'time_control':time_control, 'rated':rated, 'rules':rules, 'pgn':pgn})
+      games_df.append({'game_id':game_id, 'opening':opening, 'white_rating':white_rating, 'black_rating':black_rating, 
+                       'white_result':white_result, 'black_result':black_result, 'time_class':time_class, 
+                       'time_control':time_control, 'rated':rated, 'rules':rules, 'pgn':pgn})
       
     return pd.DataFrame.from_records(games_df)
 
