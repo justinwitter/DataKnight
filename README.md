@@ -10,7 +10,7 @@ While the traditional chess engine recommends the optimal move in certain positi
 
 ## Contents
 
-1. **chessdotcom-scraper.py** : retrieves data using the Chess.com API, ouputs *raw_data.csv*
+1. **chessdotcom-scraper.py** : retrieves data using the Chess.com API, outputs *raw_data.csv*
 2. **data-preparation.ipynb** : cleans data and engineers features, outputs *clean_data.csv*
 3. **habits-analysis.ipynb** : explores recommended chess habits using statistical methods
 
