@@ -108,16 +108,14 @@ async def main():
 
     # randomize players and limit sample if needed
     player_limit = 1000
-    if player_limit < len(all_players):
-      random_players = sample(all_players, player_limit)
+    random_players = sample(all_players, player_limit) if player_limit < len(all_players) else all_players
 
     # get monthly games for each player
     all_games = await get_games(random_players, month = '08', year = '2023')
 
     # randomize games and limit sample if needed
     game_limit = 60000
-    if game_limit < len(all_games):
-      random_games = sample(all_games, game_limit)
+    random_games = sample(all_games, game_limit) if game_limit < len(all_games) else all_games
 
     # convert games into df
     games_df = parse_games(random_games)
