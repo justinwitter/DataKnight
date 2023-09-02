@@ -39,7 +39,7 @@ async def get_club_players(country):
 
 async def get_games(all_players, month, year):
     """
-    This function converts the json 
+    This function returns a list of all games that players have completed in the given month/year.
     """
     games = []
 
@@ -55,7 +55,7 @@ async def get_games(all_players, month, year):
 
 def parse_games(games):
     """
-    This functions
+    This functions converts a list of games into a pandas DataFrame.
     """
     games_df = []
 
@@ -89,7 +89,7 @@ async def main():
     all_players = []
 
     # get list of countries (2-character iso 3166 codes)
-    countries = pd.read_csv('/content/iso_3166_codes.csv')['alpha-2']
+    countries = pd.read_csv('iso_3166_codes.csv')['alpha-2']
 
     # get players from each country
     for country in tqdm(countries, desc='Getting players'):
