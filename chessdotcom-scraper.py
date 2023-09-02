@@ -8,16 +8,16 @@ from random import sample
 from chessdotcom.aio import ChessDotComError, get_country_players, get_country_clubs, get_club_members, get_player_games_by_month
 
 """
-This is a script to scrape online chess games from chess.com's public API (https://www.chess.com/news/view/published-data-api#pubapi-endpoint-country-players). 
-The chess.com Python Wrapper (https://chesscom.readthedocs.io/_/downloads/en/latest/pdf/) is used to leverage pre-built methods that can access all endpoints 
-provided by the API. Asynchronous requests are made to gather relevant information such as lists of chess.com users by country, stats related to each user, 
-and their monthly games played. The file "raw_data.csv" is created in main() to export the retrieved data.
+This is a script to scrape online chess games from chess.com's public API (chess.com/news/view/published-data-api#pubapi-endpoint-country-players). 
+The chess.com Python Wrapper (https://chesscom.readthedocs.io/_/downloads/en/latest/pdf/) is used to leverage pre-built methods that can access 
+all endpoints provided by the API. Asynchronous requests are made to gather relevant information such as lists of chess.com users by country, 
+stats related to each user, and their monthly games played. The file "raw_data.csv" is created in main() to export the retrieved data.
 """
 
 async def get_players(country):
     """
-    This function returns a list of users that identify themselves as being in the given country. The chess.com API does not currently support 
-    pagination, therefore only the first 10,000 usernames (alphabetical order) are provided.
+    This function returns a list of users that identify themselves as being in the given country. The chess.com API does not currently 
+    support pagination, therefore only the first 10,000 usernames (alphabetical order) are provided.
     """
     players = await asyncio.gather(get_country_players(country))
     return list(players[0].json.values())[0]
@@ -83,8 +83,9 @@ def parse_games(games):
         opening = None
       
       # create row in df
-      games_df.append({'game_id':game_id, 'opening':opening, 'white_rating':white_rating, 'black_rating':black_rating, 'white_result':white_result,
-                      'black_result':black_result, 'time_class':time_class, 'time_control':time_control, 'rated':rated, 'rules':rules, 'pgn':pgn})
+      games_df.append({'game_id':game_id, 'opening':opening, 'white_rating':white_rating, 
+                       'black_rating':black_rating, 'white_result':white_result, 'black_result':black_result, 
+                       'time_class':time_class, 'time_control':time_control, 'rated':rated, 'rules':rules, 'pgn':pgn})
       
     return pd.DataFrame.from_records(games_df)
 
