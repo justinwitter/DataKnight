@@ -11,7 +11,7 @@ from chessdotcom.aio import ChessDotComError, get_country_players, get_country_c
 This is a script to scrape online chess games from chess.com's public API (https://www.chess.com/news/view/published-data-api#pubapi-endpoint-country-players). 
 The chess.com Python Wrapper (https://chesscom.readthedocs.io/_/downloads/en/latest/pdf/) is used to leverage pre-built methods that can access all endpoints 
 provided by the API. Asynchronous requests are made to gather relevant information such as lists of chess.com users by country, stats related to each user, 
-and their monthly games played. The final dataset is exported to "raw_data.csv".
+and their monthly games played. The file "raw_data.csv" is created in main() to export the retrieved data.
 """
 
 async def get_players(country):
