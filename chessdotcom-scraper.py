@@ -13,8 +13,8 @@ and their monthly games played.
 
 async def get_players(country):
     """
-    This function returns a list of users that identify themselves as being in the given country. For now the chess.com API does not support pagination,
-    therefore it only provides the first 10,000 usernames in alphabetical order.
+    This function returns a list of users that identify themselves as being in the given country. The chess.com API does not currently support 
+    pagination, therefore only the first 10,000 usernames (alphabetical order) are provided.
     """
     players = await asyncio.gather(get_country_players(country))
     return list(players[0].json.values())[0]
@@ -23,15 +23,15 @@ async def get_club_players(country):
     """
     This function returns a list of members from all clubs that are located in or are associated with the given country.
     """
+    # get clubs from country
     clubs = await asyncio.gather(get_country_clubs(country))
     clubs = [x.split('club/')[1] for x in list(clubs[0].json.values())[0]]
 
+    # extract members from each club
     club_players = []
-
     for club in clubs:
       club_dict = await asyncio.gather(get_club_members(club))
       club_dict = list(club_dict[0].json.values())[0]
-
       for activity_level in club_dict:
         club_players.extend([x['username'] for x in club_dict[activity_level]])
 
@@ -43,13 +43,13 @@ async def get_games(all_players, month, year):
     """
     games = []
 
+    # extract games for each player
     for player in tqdm(all_players, desc='Getting games'):
       try:
         data = await asyncio.gather(get_player_games_by_month(username=player, year=year, month=month))
         games.extend(list(data[0].json.values())[0])
       except ChessDotComError:
-        break
-        #continue
+        continue
 
     return games
 
@@ -59,6 +59,7 @@ def parse_games(games):
     """
     games_df = []
 
+    # extract attributes for each game
     for game in tqdm(games, desc='Parsing games'):
       game_id = game['url'].split('/')[-1]
       white_rating = game['white']['rating']
@@ -70,21 +71,21 @@ def parse_games(games):
       rated = game['rated']
       rules = game['rules']
 
-      # include opening/pgn only if a move has been played
+      # include opening/pgn if a move has been played
       try:
         pgn = game['pgn'].split('\n\n')[1][:-5]
         opening = game['pgn'].split('openings/')[1].split('"]')[0]
       except (KeyError, IndexError):
         pgn = None
         opening = None
-
+      
+      # create row in df
       games_df.append({'game_id':game_id, 'opening':opening, 'white_rating':white_rating, 'black_rating':black_rating, 'white_result':white_result,
                       'black_result':black_result, 'time_class':time_class, 'time_control':time_control, 'rated':rated, 'rules':rules, 'pgn':pgn})
       
     return pd.DataFrame.from_records(games_df)
 
 async def main():
-
     all_players = []
 
     # get list of countries (2-character iso 3166 codes)
@@ -94,10 +95,8 @@ async def main():
     for country in tqdm(countries, desc='Getting players'):
       try :
         all_players.extend(await get_players(country))
-
         # uncomment below to include more players **significantly increases runtime**
         #all_players.extend(await get_club_players(country))
-
       except ChessDotComError:
         pass
 
