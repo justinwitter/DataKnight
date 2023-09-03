@@ -93,7 +93,8 @@ async def main():
     all_players = []
 
     # get list of countries (2-character iso 3166 codes)
-    countries = pd.read_csv('iso_3166_codes.csv')['alpha-2']
+    path = '/content/iso_3166_codes.csv'
+    countries = pd.read_csv(path)['alpha-2']
 
     # get players from each country
     for country in tqdm(countries, desc='Getting players'):
