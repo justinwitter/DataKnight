@@ -76,7 +76,7 @@ def parse_games(games):
 
       # include opening/pgn if a move has been played
       try:
-        pgn = game['pgn'].split('\n\n')[1][:-5]
+        pgn = game['pgn']
         opening = game['pgn'].split('openings/')[1].split('"]')[0]
       except (KeyError, IndexError):
         pgn = None
@@ -116,7 +116,7 @@ async def main():
     all_games = await get_games(random_players, month = '08', year = '2023')
 
     # randomize games and limit sample if needed
-    game_limit = 60000
+    game_limit = 10000
     random_games = sample(all_games, game_limit) if game_limit < len(all_games) else all_games
 
     # convert games into df
