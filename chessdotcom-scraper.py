@@ -77,15 +77,24 @@ def parse_games(games):
       # include opening/pgn if a move has been played
       try:
         pgn = game['pgn']
-        opening = game['pgn'].split('openings/')[1].split('"]')[0]
+        eco = game['pgn'].split('ECO "')[1].split('"')[0]
+
+        eco_path = '/content/eco_codes.csv'
+        openings = pd.read_csv(eco_path)
+
+        opening_pgn = openings[openings['eco']==eco]['pgn'].values[0]
+        opening = openings[openings['eco']==eco]['name'].values[0]
+
       except (KeyError, IndexError):
+        eco = None
         pgn = None
         opening = None
-      
+        opening_pgn = None
+
       # create row in df
-      games_df.append({'game_id':game_id, 'opening':opening, 'white_rating':white_rating, 'black_rating':black_rating, 
+      games_df.append({'game_id':game_id, 'eco':eco, 'opening':opening, 'white_rating':white_rating, 'black_rating':black_rating, 
                        'white_result':white_result, 'black_result':black_result, 'time_class':time_class, 
-                       'time_control':time_control, 'rated':rated, 'rules':rules, 'pgn':pgn})
+                       'time_control':time_control, 'rated':rated, 'rules':rules, 'opening_pgn':opening_pgn,'pgn':pgn})
       
     return pd.DataFrame.from_records(games_df)
 
@@ -93,8 +102,8 @@ async def main():
     all_players = []
 
     # get list of countries (2-character iso 3166 codes)
-    path = '/content/iso_3166_codes.csv'
-    countries = pd.read_csv(path)['alpha-2']
+    iso_path = '/content/iso_3166_codes.csv'
+    countries = pd.read_csv(iso_path)['alpha-2']
 
     # get players from each country
     for country in tqdm(countries, desc='Getting players'):
