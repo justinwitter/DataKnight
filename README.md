@@ -19,7 +19,7 @@ I started playing chess in August of 2022 and, after about a year of non-concurr
 
 While being stuck around 600 I stumbled upon [chessbrah](https://www.youtube.com/playlist?list=PL8N8j2e7RpPnpqbISqi1SJ9_wrnNU3rEm), a YouTube channel that posted videos of GMs facing lower rated players and playing basic moves instead of crushing with theory. In fact, the GMs lost some games just to illustrate the emphasis on sound chess rather than perfect chess. I improved rapidly after watching this series and speculated the reason was because my decision-making was now being data-driven, with that data coming from GM teachings. 
 
-Chess is all about optimal decison-making so I wanted to dive into the landscape of beginner chess to truly see how these games were being played. If I could identify common mistakes and determine better alternatives, on average this information would provide myself and others with the best opportunity to move up the ranks quickly.
+Chess is all about optimal decison-making, so I wanted to dive into the landscape of beginner chess to truly see how these games were being played. If I could identify common mistakes and determine better alternatives, on average this information would provide myself and others with the best opportunity to move up the ranks quickly.
 
 This project is targeted towards casual players below 1000 (42% of playerbase) to build habits that will improve their fundamentals and allow them to play a solid game barring positional intricacies and time constraints. This opposes the conventional approach of chess engines which simply identify the best possible move in the position with little insight as to why.
 
