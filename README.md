@@ -33,3 +33,13 @@ However, watching hours of chess games is also a bit much for some casual player
 - Identify what the landscape of chess ratings/games look like, how your rating matches up, and what the obvious mistakes are for your level
 
 It is the hope that by implementing these principles alone, beginner players can achieve rapid success in reaching higher ELO ratings.
+
+## Chess.com Scraper
+
+This file provides data used for further analysis throughout this project and also provides a framework that is built upon in the Positional Analysis web app. Feel free to utilize for data scraping and exploratory data analysis.
+
+## Data Preparation
+## Habits Analysis
+## Position Analysis
+
+This app aims to provide a deeper level of analysis than habits-analysis.ipynb by allowing players to target specific openings and positions that they struggle in. 
