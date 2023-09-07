@@ -34,7 +34,7 @@ However, watching hours of chess games is also a bit much for some casual player
 
 It is the hope that by implementing these principles alone, beginner players can achieve rapid success in reaching higher ELO ratings.
 
-## Chess.com Scraper
+## [Chess.com Scraper](https://github.com/justinwitter/DataKnight/blob/main/chessdotcom-scraper.py)
 
 This file provides data used for further analysis throughout this project and also provides a framework that is built upon in the Positional Analysis web app. Feel free to utilize for data scraping and exploratory data analysis.
 
