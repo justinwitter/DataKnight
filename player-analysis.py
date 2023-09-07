@@ -217,7 +217,7 @@ with st.columns(3)[1]:
 with st.sidebar:
     st.subheader(f':date: **Date Range**')
     date_cols = st.columns(2)
-    years = range(2005, 2024)
+    years = range(2020, 2024)
     months = range(1, 13)
     
     with date_cols[0]:
@@ -228,7 +228,7 @@ with st.sidebar:
         end_month = st.selectbox(f'**End Month**', months, index=months.index(9))
 
 
-    new_dates = st.button(f'**Load Games**')
+    new_dates = st.button(f':runner: **Get Data**')
     if new_dates:
         delete_games()
     st.write("---")
@@ -250,6 +250,8 @@ if found:
 
         else:
             profile_cols = st.columns(5)
+
+        # add chess.com user link
         
 
         with profile_cols[2]:
@@ -271,7 +273,7 @@ if found:
         st.write("---")
         modes = ['Bullet', 'Blitz', 'Rapid', 'Daily']
         mode_dict = {'Bullet':'chess_bullet', 'Blitz':'chess_blitz', 'Rapid':'chess_rapid', 'Daily':'chess_daily'}
-        stats_columns = st.columns(4)
+        stats_columns = st.columns(3)
         with stats_columns[0]:
             mode = st.radio(f':clock1: **Mode**', modes, index=modes.index('Rapid'))
             
@@ -288,20 +290,21 @@ if found:
 
             total = stats["wins"] + stats["losses"] + stats["draws"]
             with stats_columns[1]:
-                st.write(f':trophy: **Wins**: {stats["wins"]} || {100*stats["wins"]/total:0.1f}%')
-                st.write(f':chart: **Current Rating**: {stats["current_rating"]}')
+                st.write(f':trophy: **Wins**: :green[{stats["wins"]}] (:green[{100*stats["wins"]/total:0.1f}%])')
+                st.write(f':x: **Losses**: :red[{stats["losses"]}] (:red[{100*stats["losses"]/total:0.1f}%])')
+                st.write(f':heavy_minus_sign: **Draws**: :gray[{stats["draws"]}] (:gray[{100*stats["draws"]/total:0.1f}%])')
+
             with stats_columns[2]:
-                st.write(f':x: **Losses**: {stats["losses"]} || {100*stats["losses"]/total:0.1f}%')
+                st.write(f':chart: **Current Rating**: {stats["current_rating"]}')
                 st.write(f':star: **Best Rating**: {stats["best_rating"]}')
-            with stats_columns[3]:
-                st.write(f':heavy_minus_sign: **Draws**: {stats["draws"]} || {100*stats["draws"]/total:0.1f}%')
+
 
 
     if "games" not in st.session_state or username != st.session_state.user:
         st.session_state.user = username
         st.session_state.games = asyncio.run(get_games(username,start_month=start_month,start_year=start_year,end_month=end_month,end_year=end_year))
 
-    # OPENINGS SECTION
+    # TOP OPENINGS SECTION
     with tabs[2]:
         
         if st.session_state.games == []:
@@ -328,15 +331,15 @@ if found:
                     analysis_df = games_df[games_df['black_player']==username]
 
                 st.write(f'**Openings faced as {":white_circle: White" if white else ":black_circle: Black"}...**')
-                opening_df = analysis_df['opening'].value_counts()
-                st.write(opening_df)
+                top_openings = analysis_df['opening'].value_counts()
+                st.write(top_openings)
 
 
 
             with analysis_cols[1]:
                 st.write(f':star: **Best Opening**: {"opening"}')
                 st.write(f':x: **Worst Opening**: {"opening"}')
-                st.write(f':heartpulse: **Favorite Opening**: {opening_df.index[0]}')
+                st.write(f':heartpulse: **Favorite Opening**: {top_openings.index[0]}')
             st.write("---")
                 
             
@@ -360,16 +363,15 @@ if found:
 
             with board_cols[2]:
                 if white:
-                    analysis_df = games_df[games_df['white_player']==username]
-                    analysis_df.reset_index(inplace=True)
+                    opening_df = games_df[games_df['white_player']==username]
                 else:
-                    analysis_df = games_df[games_df['black_player']==username] 
-                    analysis_df.reset_index(inplace=True)
+                    opening_df = games_df[games_df['black_player']==username] 
 
-                opening = st.selectbox('Select opening to analyze...', analysis_df['opening'].value_counts().index)
-                variations = np.unique(games_df[games_df['opening']==opening]['opening_pgn'].values)
+                opening = st.selectbox('Select opening to analyze...', top_openings.index)
+                analysis_df = opening_df[(opening_df['opening']==opening)]
+                variations = np.unique(analysis_df['opening_pgn'].values)
                 chosen_variations = st.multiselect("Variations", variations, default = variations)
-                analysis_df = games_df[(games_df['opening']==opening) & (games_df['opening_pgn'])]
+                analysis_df = opening_df[(opening_df['opening_pgn'].isin(chosen_variations))]
              
                 analysis_df.reset_index(inplace=True)
                 games = []
@@ -446,7 +448,7 @@ if found:
                         
                         if st.session_state['move_num'] == len(st.session_state.moves)-1:
                             termination = pgn.split("Termination \"")[1].split("\"")[0]
-                            st.write(f'**{side} played {fullmove_number}. {move_san} || {termination}**')
+                            st.write(f'**{side} played {fullmove_number}. {move_san} ({termination})**')
                         else:
                             st.write(f'**{side} played {fullmove_number}. {move_san}**')
                     else:
@@ -488,11 +490,11 @@ if found:
                                 
 
 
-                            st.write(f':trophy: **:green[Wins]**: {counts["win"]} || {win_pct:0.2f}%')
-                            st.write(f':x: **:red[Losses]**: {losses} || {lose_pct:0.2f}%')
-                            st.write(f':heavy_minus_sign: **:gray[Draws]**: {draws} || {draw_pct:0.2f}%')
+                            st.write(f':trophy: **:green[Wins]**: :green[{counts["win"]}] (:green[{win_pct:0.1f}%])')
+                            st.write(f':x: **:red[Losses]**: :red[{losses}] (:red[{lose_pct:0.1f}%])')
+                            st.write(f':heavy_minus_sign: **:gray[Draws]**: :gray[{draws}] (:gray[{draw_pct:0.1f}%])')
                         else:
-                            st.message("You haven't been in this position before...")
+                            st.error("You haven't been in this position before...")
                 else:
                     with st.chat_message(name='assistant',avatar='👋'):
                         st.write(f'**Press play or iterate through moves to start.**')
@@ -537,8 +539,20 @@ if found:
                             render_svg(svg)
                             if st.session_state['move_num'] == len(st.session_state.moves)-1:
                                 termination = pgn.split("Termination \"")[1].split("\"")[0]
-                                st.write(f'**{side} played {fullmove_number}. {move_san} || {termination}**')
+                                st.write(f'**{side} played {fullmove_number}. {move_san} ({termination})**')
                             else:
                                 st.write(f'**{side} played {fullmove_number}. {move_san}**')
+
+
+
+
+
+
+
+                    
+
+        
+            
+
 
 
