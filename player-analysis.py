@@ -159,7 +159,7 @@ def get_fens(pgns):
 
         for move in game.mainline_moves():
             board.push(move)
-            fens.append(game.board().fen().split(" ")[0])
+            fens.append(board.fen().split(" ")[0])
         
         all_fens.append(fens)
         
@@ -359,10 +359,18 @@ if found:
                 
 
             with board_cols[2]:
+                if white:
+                    analysis_df = games_df[games_df['white_player']==username]
+                    analysis_df.reset_index(inplace=True)
+                else:
+                    analysis_df = games_df[games_df['black_player']==username] 
+                    analysis_df.reset_index(inplace=True)
+
                 opening = st.selectbox('Select opening to analyze...', analysis_df['opening'].value_counts().index)
                 variations = np.unique(games_df[games_df['opening']==opening]['opening_pgn'].values)
                 chosen_variations = st.multiselect("Variations", variations, default = variations)
-                analysis_df = games_df[(games_df['opening']==opening) & (games_df['opening_pgn'].isin(chosen_variations))]
+                analysis_df = games_df[(games_df['opening']==opening) & (games_df['opening_pgn'])]
+             
                 analysis_df.reset_index(inplace=True)
                 games = []
                 for i in stqdm(range(len(analysis_df)), "Collecting Data"):
@@ -446,21 +454,49 @@ if found:
 
             # display positional analysis
             with board_cols[2]:
-                outcome_display = st.empty()
-                with outcome_display.container():
-                    results = check_fens(games_df, st.session_state.board.fen().split(" ")[0], white)
-                    st.write(f'**Past Outcomes from Current Position**: ')
-                    if len(results) > 0 :
-                        counts = Counter(results)
-                        wins = counts["win"]
-                        losses = counts["checkmated"]+counts["abandoned"]+counts["resigned"]+counts["timeout"]
-                        draws = counts["agreed"]+counts["repetition"]+counts["stalemate"]+counts["timevsinsufficient"]+counts["insufficient"]+counts["50move"]
-                        
-                        st.write(f':trophy: **Wins**: {counts["win"]} || {100.0*counts["win"]/len(results):0.2f}%')
-                        st.write(f':x: **Losses**: {losses} || {100.0*losses/len(results):0.2f}%')
-                        st.write(f':heavy_minus_sign: **Draws**: {draws} || {100.0*draws/len(results):0.2f}%')
-                    else:
-                        st.error("Looks like this is a new position...")
+                if st.session_state.move_num != -1:
+                    outcome_display = st.empty()
+                    with outcome_display.container():
+                        if white:
+                            results = check_fens(games_df[games_df['white_player']==username].reset_index(), st.session_state.board.fen().split(" ")[0], white)
+                        else:
+                            results = check_fens(games_df[games_df['black_player']==username].reset_index(), st.session_state.board.fen().split(" ")[0], white)
+
+
+                        if len(results) > 0 :
+                            counts = Counter(results)
+                            wins = counts["win"]
+                            losses = counts["checkmated"]+counts["abandoned"]+counts["resigned"]+counts["timeout"]
+                            draws = counts["agreed"]+counts["repetition"]+counts["stalemate"]+counts["timevsinsufficient"]+counts["insufficient"]+counts["50move"]
+                            
+
+                            win_pct = 100.0*wins/len(results)
+                            lose_pct = 100.0*losses/len(results)
+                            draw_pct = 100.0*draws/len(results)
+                            
+                            
+                            
+                            if win_pct > 60.0:
+                                with st.chat_message(name='assistant',avatar='🏆'):
+                                    st.write(f'**This is a :green[strong] position for you. You\'ve won from here in :green[{win_pct:0.0f}%] of your previous games.**')
+                            elif lose_pct > 60.0:
+                                with st.chat_message(name='assistant',avatar='❌'):
+                                    st.write(f'**This is a :red[tough] position for you. You\'ve lost from here in :red[{lose_pct:0.0f}%] of your previous games.**')
+                            else:
+                                with st.chat_message(name='assistant',avatar='➖'):
+                                    st.write(f'**This is an :orange[okay] position for you. You\'ve won from here in :orange[{win_pct:0.0f}%] of your previous games.**')
+                                
+
+
+                            st.write(f':trophy: **:green[Wins]**: {counts["win"]} || {win_pct:0.2f}%')
+                            st.write(f':x: **:red[Losses]**: {losses} || {lose_pct:0.2f}%')
+                            st.write(f':heavy_minus_sign: **:gray[Draws]**: {draws} || {draw_pct:0.2f}%')
+                        else:
+                            st.message("You haven't been in this position before...")
+                else:
+                    with st.chat_message(name='assistant',avatar='👋'):
+                        st.write(f'**Press play or iterate through moves to start.**')
+            
 
 
 
@@ -492,8 +528,10 @@ if found:
                         time.sleep(speed)
                         
                         
-
-                        results = check_fens(games_df, st.session_state.board.fen().split(" ")[0], white)
+                        if white:
+                            results = check_fens(games_df[games_df['white_player']==username].reset_index(), st.session_state.board.fen().split(" ")[0], white)
+                        else:
+                            results = check_fens(games_df[games_df['black_player']==username].reset_index(), st.session_state.board.fen().split(" ")[0], white)
 
                         with output.container():
                             render_svg(svg)
@@ -502,32 +540,5 @@ if found:
                                 st.write(f'**{side} played {fullmove_number}. {move_san} || {termination}**')
                             else:
                                 st.write(f'**{side} played {fullmove_number}. {move_san}**')
-
-                        with board_cols[2]:
-                            with outcome_display.container():
-                                st.write(f'**Past Outcomes from Current Position**: ')
-                                if len(results) > 0 :
-                                    counts = Counter(results)
-                                    wins = counts["win"]
-                                    losses = counts["checkmated"]+counts["abandoned"]+counts["resigned"]+counts["timeout"]
-                                    draws = counts["agreed"]+counts["repetition"]+counts["stalemate"]+counts["timevsinsufficient"]+counts["insufficient"]+counts["50move"]
-                                    
-                                    st.write(f':trophy: **Wins**: {counts["win"]} || {100.0*counts["win"]/len(results):0.2f}%')
-                                    st.write(f':x: **Losses**: {losses} || {100.0*losses/len(results):0.2f}%')
-                                    st.write(f':heavy_minus_sign: **Draws**: {draws} || {100.0*draws/len(results):0.2f}%')
-                                else:
-                                    st.error("Looks like this is a new position...")
-
-
-
-
-
-
-
-                    
-
-        
-            
-
 
 
