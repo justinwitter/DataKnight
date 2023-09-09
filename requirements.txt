@@ -1,2 +1,3 @@
+chess
 chess.com
 stqdm
