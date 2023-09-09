@@ -21,8 +21,9 @@ from collections import Counter
 
 
 # Find more emojis here: https://www.webfx.com/tools/emoji-cheat-sheet/
-st.set_page_config(page_title="DataKnight - Player Analysis", page_icon=":chess_pawn:", layout='wide')
+st.set_page_config(page_title="DataKnight - Player Analysis", page_icon=":chess_pawn:", layout='wide', initial_sidebar_state='collapsed')
 
+# hide fullscreen option for images
 hide_img_fs = '''
 <style>
 button[title="View fullscreen"]{
@@ -179,7 +180,6 @@ def check_fens(df, current_fen, is_white):
 def delete_games():
     if 'games' in st.session_state:
         del st.session_state['games']
-        st.session_state['deleted'] = True
 
 # fix multi button presses
 # def disable():
@@ -201,21 +201,20 @@ def delete_games():
 
 # # Initialize disabled for form_submit_button to False
 # if "disabled" not in st.session_state:
-#     st.session_state.disabled = False
-
-
-with st.columns(3)[1]:
-    username = st.text_input(f':chess_pawn: Enter your **Chess.com** username...', value="justinwitter")
-    username = username.lower()
-    try:
-        profile = asyncio.run(get_profile(username))
-        found = True
-    except ChessDotComError:
-        st.error('That username doesn\'t seem to exist...')
-        found = False
+# #     st.session_state.disabled = False
+st.markdown("""
+        <style>
+               .block-container {
+                    padding-top: 0.75rem;
+                    padding-bottom: 0rem;
+                    padding-left: 2rem;
+                    padding-right: 5rem;
+                }
+        </style>
+        """, unsafe_allow_html=True)
 
 with st.sidebar:
-    st.subheader(f':date: **Date Range**')
+    st.subheader(f':date: Date Range')
     date_cols = st.columns(2)
     years = range(2020, 2024)
     months = range(1, 13)
@@ -227,14 +226,25 @@ with st.sidebar:
         start_month = st.selectbox(f'**Start Month**', months, index=months.index(9))
         end_month = st.selectbox(f'**End Month**', months, index=months.index(9))
 
-
     new_dates = st.button(f':runner: **Get Data**')
     if new_dates:
         delete_games()
-    st.write("---")
 
+
+header_cols = st.columns(3)    
+with header_cols[2]:
     colors = [':white_circle: White',':black_circle: Black']
     chosen_color = st.radio(f'**Color**', colors, index=colors.index(':white_circle: White'))
+
+with header_cols[1]:
+    username = st.text_input(f':chess_pawn: Enter your **Chess.com** username...', value="justinwitter")
+    username = username.lower()
+    try:
+        profile = asyncio.run(get_profile(username))
+        found = True
+    except ChessDotComError:
+        st.error('That username doesn\'t seem to exist...')
+        found = False
 
 
 tabs = st.tabs([":information_source: Profile", ":bar_chart: All-Time Stats", ":medal: Top Openings", ":open_book: Opening Analyzer"])
@@ -330,16 +340,32 @@ if found:
                     white = False
                     analysis_df = games_df[games_df['black_player']==username]
 
-                st.write(f'**Openings faced as {":white_circle: White" if white else ":black_circle: Black"}...**')
-                top_openings = analysis_df['opening'].value_counts()
-                st.write(top_openings)
+                st.write(f'**Openings faced as {"White :white_circle:" if white else "Black :black_circle:"}**')
+                openings_stats = pd.DataFrame()
+
+                openings_stats['Opening'] = analysis_df['opening'].value_counts().index
+
+                games_played = analysis_df["opening"].value_counts().values
+                games_played_pct = 100.0*analysis_df["opening"].value_counts(normalize=True).values
+                openings_stats['Games Played'] = [f'{value} ({pct:0.1f}%)' for value, pct in zip(games_played,games_played_pct)]
+
+                totals = []
+                for opening in openings_stats['Opening']:
+                    
+       
+                    total = len(analysis_df[analysis_df["opening"]==opening])
+                    totals.append(total)
+
+                #openings_stats['totals'] = totals
+
+                st.write(openings_stats)
 
 
 
             with analysis_cols[1]:
-                st.write(f':star: **Best Opening**: {"opening"}')
-                st.write(f':x: **Worst Opening**: {"opening"}')
-                st.write(f':heartpulse: **Favorite Opening**: {top_openings.index[0]}')
+                st.write(f':star: **Best Opening**: {":construction_worker: Under Construction"}')
+                st.write(f':x: **Worst Opening**: {":construction_worker: Under Construction"}')
+                st.write(f':heartpulse: **Favorite Opening**: {openings_stats["Opening"][0]}')
             st.write("---")
                 
             
@@ -367,7 +393,7 @@ if found:
                 else:
                     opening_df = games_df[games_df['black_player']==username] 
 
-                opening = st.selectbox('Select opening to analyze...', top_openings.index)
+                opening = st.selectbox('Select opening to analyze...', openings_stats['Opening'])
                 analysis_df = opening_df[(opening_df['opening']==opening)]
                 variations = np.unique(analysis_df['opening_pgn'].values)
                 chosen_variations = st.multiselect("Variations", variations, default = variations)
@@ -393,13 +419,14 @@ if found:
 
                 st.write("---")
             
-            chosen_game = st.selectbox('Current Game', games)
+            chosen_game = st.selectbox(f'Archive ({opening})', games)
+            chosen_game_id = chosen_game.split("ID: ")[1]
             st.write("---")
 
 
             sides = {True:'white',False:'black'}
 
-            pgn = analysis_df[analysis_df['game_id']==chosen_game.split("ID: ")[1]]['pgn'].values[0]
+            pgn = analysis_df[analysis_df['game_id']==chosen_game_id]['pgn'].values[0]
             pgn_stringio = io.StringIO(pgn)
 
             if stop_button and 'existing_game' in st.session_state:
@@ -460,9 +487,11 @@ if found:
                     outcome_display = st.empty()
                     with outcome_display.container():
                         if white:
-                            results = check_fens(games_df[games_df['white_player']==username].reset_index(), st.session_state.board.fen().split(" ")[0], white)
+                            col = 'white_player'
                         else:
-                            results = check_fens(games_df[games_df['black_player']==username].reset_index(), st.session_state.board.fen().split(" ")[0], white)
+                            col = 'black_player'
+                            
+                        results = check_fens(games_df[(games_df[col]==username)&(games_df['game_id']!=chosen_game_id)].reset_index(), st.session_state.board.fen().split(" ")[0], white)
 
 
                         if len(results) > 0 :
@@ -494,7 +523,7 @@ if found:
                             st.write(f':x: **:red[Losses]**: :red[{losses}] (:red[{lose_pct:0.1f}%])')
                             st.write(f':heavy_minus_sign: **:gray[Draws]**: :gray[{draws}] (:gray[{draw_pct:0.1f}%])')
                         else:
-                            st.error("You haven't been in this position before...")
+                            st.error("No similar positions found...")
                 else:
                     with st.chat_message(name='assistant',avatar='👋'):
                         st.write(f'**Press play or iterate through moves to start.**')
