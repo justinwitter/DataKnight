@@ -78,7 +78,7 @@ def parse_games(games):
         pgn = game['pgn']
         eco = game['pgn'].split('ECO "')[1].split('"')[0]
 
-        eco_path = r"C:\Users\witte\Downloads\eco_codes.csv"
+        eco_path = "./data/eco_codes.csv"
         openings = pd.read_csv(eco_path)
 
         opening_pgn = openings[openings['eco']==eco]['pgn'].values[0]
