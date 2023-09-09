@@ -224,7 +224,7 @@ with st.sidebar:
         start_year = st.selectbox(f'**Start Year**', years, index=years.index(2023))
         end_year = st.selectbox(f'**End Year**', years, index=years.index(2023))
     with date_cols[1]:
-        start_month = st.selectbox(f'**Start Month**', months, index=months.index(9))
+        start_month = st.selectbox(f'**Start Month**', months, index=months.index(8))
         end_month = st.selectbox(f'**End Month**', months, index=months.index(9))
 
     new_dates = st.button(f':runner: **Get Data**')
