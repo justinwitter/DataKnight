@@ -1,41 +1,22 @@
-# Player Analysis (DataKnight)
+# Position Analysis (DataKnight)
 # Justin Witter Aug-Sep 2023
 
 import streamlit as st
-
 import pandas as pd
 import numpy as np
 import asyncio
-from stqdm import stqdm
-from random import sample
-from chessdotcom.aio import ChessDotComError, get_player_profile, get_player_stats, get_player_games_by_month
-
 import io
 import time
 import chess.svg
 import chess.pgn
-
 import base64
-
+from stqdm import stqdm
 from collections import Counter
+from chessdotcom.aio import ChessDotComError, get_player_profile, get_player_stats, get_player_games_by_month
 
 
-# Find more emojis here: https://www.webfx.com/tools/emoji-cheat-sheet/
-st.set_page_config(page_title="DataKnight - Player Analysis", page_icon=":chess_pawn:", layout='wide', initial_sidebar_state='collapsed')
-
-# hide fullscreen option for images
-hide_img_fs = '''
-<style>
-button[title="View fullscreen"]{
-    visibility: hidden;}
-</style>
-'''
-
-st.markdown(hide_img_fs, unsafe_allow_html=True)
-
-
-# This script generates a Streamlit web app that allows Chess.com players to get information on their openings.
-# Link to deployed app: ()
+# This script generates a Streamlit web app that allows Chess.com players to analyze their positions.
+# Link to deployed app: dataknight.streamlit.app
 
 
 async def get_games(player, start_month,start_year,end_month,end_year):
@@ -78,7 +59,7 @@ def parse_games(games):
         pgn = game['pgn']
         eco = game['pgn'].split('ECO "')[1].split('"')[0]
 
-        eco_path = "./data/eco_codes.csv"
+        eco_path = eco_path = "./data/eco_codes.csv"
         openings = pd.read_csv(eco_path)
 
         opening_pgn = openings[openings['eco']==eco]['pgn'].values[0]
@@ -98,6 +79,9 @@ def parse_games(games):
     return pd.DataFrame.from_records(games_df)
 
 async def get_profile(player):
+    """
+    Retrieves profile information for the given username.
+    """
     info = await asyncio.gather(get_player_profile(username=player))
     try:
         avatar = list(info[0].json.values())[0]['avatar']
@@ -111,9 +95,13 @@ async def get_profile(player):
         league = list(info[0].json.values())[0]['league']
     except KeyError:
         league = None
+    try:
+        url = list(info[0].json.values())[0]['url']
+    except KeyError:
+        url = None
 
     followers = list(info[0].json.values())[0]['followers']
-    return {'avatar':avatar,'name':name,'followers':followers,'league':league}
+    return {'avatar':avatar,'name':name,'followers':followers,'league':league, 'url':url}
 
 
 async def show_stats(player, mode):
@@ -202,6 +190,19 @@ def delete_games():
 # # Initialize disabled for form_submit_button to False
 # if "disabled" not in st.session_state:
 # #     st.session_state.disabled = False
+
+# Find more emojis here: https://www.webfx.com/tools/emoji-cheat-sheet/
+st.set_page_config(page_title="DataKnight", page_icon=":chess_pawn:", layout='wide', initial_sidebar_state='collapsed')
+
+# hide fullscreen option for images
+hide_img_fs = '''
+<style>
+button[title="View fullscreen"]{
+    visibility: hidden;}
+</style>
+'''
+
+st.markdown(hide_img_fs, unsafe_allow_html=True)
 st.markdown("""
         <style>
                .block-container {
@@ -232,12 +233,17 @@ with st.sidebar:
 
 
 header_cols = st.columns(3)    
+# with header_cols[0]:
+#     with st.columns(3)[1]:
+#         st.subheader(':chess_pawn: DataKnight')
 with header_cols[2]:
-    colors = [':white_circle: White',':black_circle: Black']
-    chosen_color = st.radio(f'**Color**', colors, index=colors.index(':white_circle: White'))
+    with st.columns(3)[1]:
+        colors = [':white_circle: White',':black_circle: Black']
+        chosen_color = st.radio(f'**Color**', colors, index=colors.index(':white_circle: White'))
 
 with header_cols[1]:
-    username = st.text_input(f':chess_pawn: Enter your **Chess.com** username...', value="justinwitter")
+    
+    username = st.text_input(f'Enter your **Chess.com** username...', value="justinwitter")
     username = username.lower()
     try:
         profile = asyncio.run(get_profile(username))
@@ -274,6 +280,8 @@ if found:
             st.write(f':bald_man: **Followers**: {profile["followers"]}')
             if profile['league']:
                 st.write(f':trident: **League**: {profile["league"]}')
+            if profile['url']:
+                st.write(f':link: **Link**: {profile["url"]}')
         st.write("---")
 
 
@@ -300,9 +308,9 @@ if found:
 
             total = stats["wins"] + stats["losses"] + stats["draws"]
             with stats_columns[1]:
-                st.write(f':trophy: **Wins**: :green[{stats["wins"]}] (:green[{100*stats["wins"]/total:0.1f}%])')
-                st.write(f':x: **Losses**: :red[{stats["losses"]}] (:red[{100*stats["losses"]/total:0.1f}%])')
-                st.write(f':heavy_minus_sign: **Draws**: :gray[{stats["draws"]}] (:gray[{100*stats["draws"]/total:0.1f}%])')
+                st.write(f':trophy: **:green[Wins]**: :green[{stats["wins"]}] (:green[{100*stats["wins"]/total:0.0f}%])')
+                st.write(f':x: **:red[Losses]**: :red[{stats["losses"]}] (:red[{100*stats["losses"]/total:0.0f}%])')
+                st.write(f':heavy_minus_sign: **:gray[Draws]**: :gray[{stats["draws"]}] (:gray[{100*stats["draws"]/total:0.0f}%])')
 
             with stats_columns[2]:
                 st.write(f':chart: **Current Rating**: {stats["current_rating"]}')
@@ -519,9 +527,9 @@ if found:
                                 
 
 
-                            st.write(f':trophy: **:green[Wins]**: :green[{counts["win"]}] (:green[{win_pct:0.1f}%])')
-                            st.write(f':x: **:red[Losses]**: :red[{losses}] (:red[{lose_pct:0.1f}%])')
-                            st.write(f':heavy_minus_sign: **:gray[Draws]**: :gray[{draws}] (:gray[{draw_pct:0.1f}%])')
+                            st.write(f':trophy: **:green[Wins]**: :green[{counts["win"]}] (:green[{win_pct:0.0f}%])')
+                            st.write(f':x: **:red[Losses]**: :red[{losses}] (:red[{lose_pct:0.0f}%])')
+                            st.write(f':heavy_minus_sign: **:gray[Draws]**: :gray[{draws}] (:gray[{draw_pct:0.0f}%])')
                         else:
                             st.error("No similar positions found...")
                 else:
