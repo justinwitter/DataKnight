@@ -27,7 +27,7 @@ It is the hope that with these resources alone, beginner players can achieve rap
 
 ## [Chess.com Scraper](https://github.com/justinwitter/DataKnight/blob/main/chessdotcom-scraper.py)
 
-This file provides data used for further analysis throughout this project and also provides a framework that is built upon in the Positional Analysis web app. Feel free to utilize for data scraping and exploratory data analysis.
+This file provides data used for further analysis throughout this project and also provides a framework that is built upon in the Position Analysis web app. Feel free to utilize for data scraping and exploratory data analysis.
 
 ## Data Preparation
 ## Habits Analysis
