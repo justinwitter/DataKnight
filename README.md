@@ -4,7 +4,7 @@ Hi! Welcome to DataKnight.
 
 This project aims to help casual chess players quickly improve their game.
 
-In the interest of speed, it would be counterintuitive to analyze hundreds (if not thousands) of openings, structures, and endgames that an advanced player may be exposed to. Instead, the goal is to implement fundamental chess principles and optimize common positions while using data from real games as support.
+In the interest of speed, it would be counterintuitive to memorize hundreds (if not thousands) of openings, structures, and endgames that an advanced player may be exposed to. Instead, the goal is to implement fundamental chess principles and optimize common positions while using data from real games as support.
 
 ## Contents
 
