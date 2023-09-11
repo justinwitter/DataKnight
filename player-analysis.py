@@ -59,6 +59,7 @@ def parse_games(games):
         pgn = game['pgn']
         eco = game['pgn'].split('ECO "')[1].split('"')[0]
 
+        #eco_path = r"C:\Users\witte\Downloads\eco_codes.csv"
         eco_path = eco_path = "./data/eco_codes.csv"
         openings = pd.read_csv(eco_path)
 
@@ -266,9 +267,6 @@ if found:
 
         else:
             profile_cols = st.columns(5)
-
-        # add chess.com user link
-        
 
         with profile_cols[2]:
             
@@ -491,8 +489,9 @@ if found:
 
             # display positional analysis
             with board_cols[2]:
+                outcome_display = st.empty()
                 if st.session_state.move_num != -1:
-                    outcome_display = st.empty()
+
                     with outcome_display.container():
                         if white:
                             col = 'white_player'
@@ -533,16 +532,25 @@ if found:
                         else:
                             st.error("No similar positions found...")
                 else:
-                    with st.chat_message(name='assistant',avatar='👋'):
-                        st.write(f'**Press play or iterate through moves to start.**')
+                    with outcome_display.container():
+                        with st.chat_message(name='assistant',avatar='👋'):
+                            st.write(f'**Press play or iterate through moves to start.**')
             
 
 
 
             # CREATE CHESS BOARD
-            with board_cols[0]:
+            
 
-                if play_button and not stop_button and not pause_button:
+            if play_button and not stop_button and not pause_button:
+
+                
+                with board_cols[2]:
+                    with outcome_display.container():
+                        with st.chat_message(name='assistant',avatar='⌛'):
+                            st.write(f'**Pause at desired position to see analysis.**')
+
+                with board_cols[0]:
                     
                     while not stop_button and not pause_button and st.session_state['move_num'] != len(st.session_state.moves)-1:
                         #get next move
@@ -579,6 +587,8 @@ if found:
                                 st.write(f'**{side} played {fullmove_number}. {move_san} ({termination})**')
                             else:
                                 st.write(f'**{side} played {fullmove_number}. {move_san}**')
+                    
+
 
 
 
