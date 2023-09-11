@@ -10,8 +10,8 @@ In the interest of speed, it would be counterintuitive to memorize hundreds (if 
 
 1. **chessdotcom-scraper.py** : retrieves data using the Chess.com API, outputs *raw_data.csv*
 2. **data-preparation.ipynb** : cleans data and engineers features, outputs *clean_data.csv*
-3. **habits-analysis.ipynb** : explores recommended chess habits using statistical methods
-4. **player-analysis.py** : creates a web app for individual player analysis
+3. **habits-analysis.ipynb** : explores beginner chess principles using statistical methods
+4. **player-analysis.py** : creates a web app for individual position analysis
 
 ## Background
 
