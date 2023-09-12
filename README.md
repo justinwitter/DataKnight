@@ -25,12 +25,3 @@ This project is targeted towards casual players below 1000 (42% of playerbase) t
 
 It is the hope that with these resources alone, beginner players can achieve rapid success in reaching higher ELO ratings.
 
-## [Chess.com Scraper](https://github.com/justinwitter/DataKnight/blob/main/chessdotcom-scraper.py)
-
-This file provides data used for further analysis throughout this project and also provides a framework that is built upon in the Position Analysis web app. Feel free to utilize for data scraping and exploratory data analysis.
-
-## Data Preparation
-## Habits Analysis
-## Position Analysis
-
-This app aims to provide a deeper level of analysis than habits-analysis.ipynb by allowing players to target specific openings and positions that they struggle in. 
