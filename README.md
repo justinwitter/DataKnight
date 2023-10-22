@@ -23,5 +23,5 @@ Chess is all about optimal decison-making, so I wanted to dive into the landscap
 
 This project is targeted towards casual players below 1000 (42% of playerbase) to build habits that will improve their fundamentals and allow them to play a solid game barring positional intricacies and time constraints. This opposes the conventional approach of chess engines which simply identify the best possible move in the position with little insight as to why.
 
-It is the hope that with these resources alone, beginner players can achieve rapid success in reaching higher ELO ratings.
+With these resources alone, beginner players have the opportunity to achieve rapid success in reaching higher ELO ratings.
 
