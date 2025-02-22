@@ -244,7 +244,7 @@ with header_cols[2]:
 
 with header_cols[1]:
     
-    username = st.text_input(f'Enter your **Chess.com** username...', value="justinwitter")
+    username = st.text_input(f'Enter your **Chess.com** username...', value="tensirr")
     username = username.lower()
     try:
         profile = asyncio.run(get_profile(username))
