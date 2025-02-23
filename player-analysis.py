@@ -12,7 +12,7 @@ import chess.pgn
 import base64
 from stqdm import stqdm
 from collections import Counter
-from chessdotcom.aio import ChessDotComError, get_player_profile, get_player_stats, get_player_games_by_month
+from chessdotcom.aio import get_player_profile, get_player_stats, get_player_games_by_month
 
 
 # This script generates a Streamlit web app that allows Chess.com players to analyze their positions.
@@ -249,7 +249,7 @@ with header_cols[1]:
     try:
         profile = asyncio.run(get_profile(username))
         found = True
-    except ChessDotComError:
+    except:
         st.error('That username doesn\'t seem to exist...')
         found = False
 
